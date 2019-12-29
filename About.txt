@@ -1,2 +1,2 @@
 R project for Operation research - UPC
-In the second time I will edit some function in Rcode namely ...
+In the second time I will edit some function in Rcode namely ...I edit the main function 
