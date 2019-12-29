@@ -4,6 +4,8 @@ author: "Pham Thi Van Ha, Helena Linares Arlanzón y María Campaña Otero"
 date: "26/12/2019"
 output:
   html_document: default
+  word_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -13,11 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 **EJERCICIO 1 a)**
 
 
-```{r, echo=FALSE}
-##setwd("G:\\MESIO\\Computacio\\R\\Practica")
-```
-
-WE get data directly from web
+We get data directly from web
 
 ```{r}
 library(rvest)
@@ -48,8 +46,6 @@ temp <- url %>%
   html_table(fill = TRUE)
 
 tempo <- temp[[1]]
-tempo
-
 tran <- t(na.omit(t(tempo)))
 
 sea <- as.data.frame(tran) ## here is the dataframe to store all the data scraping from web. 
@@ -116,10 +112,8 @@ test$Deep_minus20_m <- as.numeric(test$Deep_minus20_m)
 test$Deep_0_m <- as.numeric(test$Deep_0_m)
 
 
-
 substrRight <- function(x, n){
   substr(x, nchar(x)-n+1, nchar(x))}
-
 
 
 final_table <- test
@@ -169,7 +163,6 @@ sea.deep$depth <- ifelse(sea.deep$variable =="Deep_0_m", 0,
 names(sea.deep)[7] <- "temperature"
 
 sea.deep$depth <- as.factor(sea.deep$depth)
-
 
 ```
 
@@ -254,10 +247,10 @@ for (val in n_depth)
 {
   datos_profundidades <- subset(sea.deep, sea.deep$depth==toString(val))
   print(val)
-  print(eval(sprintf("media temperaturas profundidad %d: %.2f", val,mean(datos_profundidades$temperature))))
-  print(eval(sprintf("mediana temperaturas profundidad %d: %.2f", val,median(datos_profundidades$temperature))))
-  print(eval(sprintf("desviación estándar temperaturas profundidad %d: %.2f", val,sd(datos_profundidades$temperature))))
-  print(eval(sprintf("rango intercuartil temperaturas profundidad %d: %.2f", val,IQR(datos_profundidades$temperature))))
+  print(eval(sprintf("media temperaturas profundidad %s: %.2f", val,mean(datos_profundidades$temperature))))
+  print(eval(sprintf("mediana temperaturas profundidad %s: %.2f", val,median(datos_profundidades$temperature))))
+  print(eval(sprintf("desviación estándar temperaturas profundidad %s: %.2f", val,sd(datos_profundidades$temperature))))
+  print(eval(sprintf("rango intercuartil temperaturas profundidad %s: %.2f", val,IQR(datos_profundidades$temperature))))
   sea_meanD <- append(sea_meanD,mean(datos_profundidades$temperature))
 }
 
@@ -314,14 +307,14 @@ library(gplots)
 library(plotrix)
 ```
 
-Primero, graficamos la evoluci?n de la temperatura del mar en los a?os disponibles utilizando
-la funcion "bandplot" del paquete gplots. Esta funcion te permite mostrar adem?s la media de la temperatura suavizada localmente y su desviaci?n est?ndar. 
+Primero, graficamos la evolución de la temperatura del mar en los años disponibles utilizando
+la funcion "bandplot" del paquete gplots. Esta funcion te permite mostrar además la media de la temperatura suavizada localmente y su desviación estándar. 
 
 ```{r}
 bandplot(n_years, sea_meanT, 
-         main="Evolucion de la temperatura del mar",
-         xlab="Ano",
-         ylab="Temperatura (Degree C)",
+         main="Evolución de la temperatura del mar",
+         xlab="Año",
+         ylab="Temperatura (ºC)",
          xlim = c(2000,2017),
          ylim = c(15,16),
          add = FALSE, sd = c(-2:2),
@@ -330,10 +323,10 @@ bandplot(n_years, sea_meanT,
 
 ```
 
-Analizando el grafico vemos como la media se mantiene relativamente estable los tres primeros a?os del periodo, mientras que en el 2003 empieza una tendencia ligeramente alcista y la desviaci?n est?ndar empieza a ensancharse.
-En el 2008 se sufre una ca?da de la temperatura media, pero en el 2009 remonta y da lugar a unos a?os de considerable crecimiento, especialmente del 2011 al 2015, a?o a partir del qual la media tendencia alcista disminuye, pero la media al final del periodo sigue siendo considerablemente m?s alta que al principio. La desviaci?n est?ndar aumenta bastante en el periodo alcista, aunque durante todo el periodo se mantiene en el rango [-2,2].
+Analizando el grafico vemos como la media se mantiene relativamente estable los tres primeros años del periodo, mientras que en el 2003 empieza una tendencia ligeramente alcista y la desviación estándar empieza a ensancharse.
+En el 2008 se sufre una caída de la temperatura media, pero en el 2009 remonta y da lugar a unos años de considerable crecimiento, especialmente del 2011 al 2015, a?o a partir del qual la media tendencia alcista disminuye, pero la media al final del periodo sigue siendo considerablemente más alta que al principio. La desviación estándar aumenta bastante en el periodo alcista, aunque durante todo el periodo se mantiene en el rango [-2,2].
 
-En los siguientes gr?ficos comparamos la temperatura seg?n la profundidad del mar.
+En los siguientes gráficos comparamos la temperatura según la profundidad del mar.
 
 ```{r}
 
@@ -354,7 +347,7 @@ brkdn.plot(temperature~ type+depth, data=plt2, main="Test of the breakdown plot"
            mct="median",md="mad",xlab="Depth", ylab="Temperature",pch=1:4,lty=1:4,col=1:4 )
 
 ```
-En ambos gr?ficos se observa la diferencia de temperatura especialmente entre la menor y mayorprofundidad. Los niveles m?ximos de temperatura aumentan si la profundidad del mar es menor.
+En ambos gráficos se observa la diferencia de temperatura especialmente entre la menor y mayorprofundidad. Los niveles m?ximos de temperatura aumentan si la profundidad del mar es menor.
 
 
 **EJERCICIO 3 a) **
@@ -362,7 +355,7 @@ En ambos gr?ficos se observa la diferencia de temperatura especialmente entre la
 ```{r}
 graficas_ej3a <- function(anos, profundidades, df) {
   par(mfrow=c(1, length(anos) * length(profundidades) + 1))
-  diferencias_matr = matrix(nrow = length(anos) * length(profundidades), ncol = 12)
+  diferencias_matr = matrix( nrow = length(anos) * length(profundidades), ncol = 12)
   diferencias_matr_fila = 1
   for (ano in anos){
     for (profundidad in profundidades){
@@ -374,14 +367,15 @@ graficas_ej3a <- function(anos, profundidades, df) {
       diferencias = c(diferencias, datos_ano_prof[12, 7] - datos_ano_prof[1, 7])
       plot(1:12, diferencias, type = "o",
            main = paste("Diferencia intermensual 
-                      (a?o=", ano, ", profundidad=", profundidad, ")"),
+                      (año=", ano, ", profundidad=", profundidad, ")"),
            cex.main=1,
-           xlab = "relaci?n mensual",
-           ylab = "Diferencia de temperatura (?C)",
+           xlab = "relación mensual",
+           ylab = "Diferencia de temperatura (ºC)",
            col = "purple",
            lwd = 3,
            xlim = c(1, 12),
-           ylim = c(-4, 4)      )
+           ylim = c(-4, 4),
+      )
       diferencias_matr[diferencias_matr_fila, ] = as.numeric(diferencias)
       diferencias_matr_fila = diferencias_matr_fila + 1
     }
@@ -398,12 +392,13 @@ graficas_ej3a <- function(anos, profundidades, df) {
        main = "medias de las diferencias
        calculadas anteriormente",
        cex.main=1,
-       xlab = "relaci?n mensual",
-       ylab = "Diferencia de temperatura (?C)",
+       xlab = "relación mensual",
+       ylab = "Diferencia de temperatura (ºC)",
        col = "red",
        lwd = 3,
        xlim = c(1, 12),
-       ylim = c(-4, 4)  )
+       ylim = c(-4, 4),
+  )
 }
 
 
@@ -417,7 +412,7 @@ graficas_ej3a <- function(anos, profundidades, df) {
 graficas_ej3b <- function(anos, profundidades, df)
 {
   par(mfrow=c(1, length(anos) * length(profundidades) + 1))
-  diferencias_matr = matrix( nrow = length(anos) * length(profundidades), ncol = 12) #matriz para almacenar las diferencias de cada (a?o, profundidad) para luego calcular la media
+  diferencias_matr = matrix( nrow = length(anos) * length(profundidades), ncol = 12) #matriz para almacenar las diferencias de cada (año, profundidad) para luego calcular la media
   diferencias_matr_fila = 1
   for (ano in anos){
     for (profundidad in profundidades){
@@ -429,10 +424,10 @@ graficas_ej3b <- function(anos, profundidades, df)
     }
     plot(1:12, diferencias, type = "o",
            main = paste("Diferencia entre la temperatura 
-                        los a?os anteriores (a?o=", ano, ", profundidad=", profundidad, ")"),
+                        los años anteriores (año=", ano, ", profundidad=", profundidad, ")"),
            cex.main=1,
-           xlab = "relaci?n del mes con el de los a?os anteriores",
-           ylab = "Diferencia de temperatura (?C)",
+           xlab = "relación del mes con el de los años anteriores",
+           ylab = "Diferencia de temperatura (ºC)",
            col = "purple",
            lwd = 3,
            xlim = c(1, 12),
@@ -483,23 +478,10 @@ graficas_ej3b(c(2000, 2001),c(0),sea.deep)
 ```
 
 **EJERCICIO 3 d) **
-```{r}
-graficas_ej3a(c(2000, 2002),c(0),sea.deep)
-graficas_ej3a(c(2000, 2010),c(0),sea.deep)
-graficas_ej3a(c(2000, 2017),c(0),sea.deep)
-graficas_ej3a(c(2003, 2017),c(0),sea.deep)
-graficas_ej3a(c(2012, 2017),c(0),sea.deep)
-```
 
-El comportamiento de la temperatura en profundidad 0 ha cambiado durante el periodo 2000-2017; al principio del periodo la temperatura cae los primeros meses del a?o y en abril sube progresivamente hasta alcanzar un pico en oto?o, donde empieza a descender. A medida que pasan los a?os, se observa que la temperatura alcanza unos m?nimos y m?ximos m?s extremos, es decir, disminuye a un nivel inferior y aumenta a un nivel superior. Aumenta y disminuye de una manera m?s brusca.  A medida que aumentamos la profundidad, el comportamiento de la temperatura es m?s err?tico y se observan menos diferencias entre meses y a?os. Cuando analizamos profundidades de -50m y -80m, vemos que con los a?os la temperatura se estabiliza ligeramente y es m?s constante, menos err?tica, es decir que toma valores menos extremos, especialmente el a?o 2017. 
+El comportamiento de la temperatura en profundidad 0 ha cambiado durante el periodo 2000-2017; al principio del periodo la temperatura cae los primeros meses del año y en abril sube progresivamente hasta alcanzar un pico en otoño, donde empieza a descender. A medida que pasan los años, se observa que la temperatura alcanza unos mínimos y máximos más extremos, es decir, disminuye a un nivel inferior y aumenta a un nivel superior. Aumenta y disminuye de una manera más brusca.  A medida que aumentamos la profundidad, el comportamiento de la temperatura es más errático y se observan menos diferencias entre meses y años. Cuando analizamos profundidades de -50m y -80m, vemos que con los años la temperatura se estabiliza ligeramente y es más constante, menos errática, es decir que toma valores menos extremos, especialmente el año 2017. 
 
-```{r}
-graficas_ej3b(c(2002, 2005),c(0),sea.deep)
-graficas_ej3b(c(2000, 2001),c(0),sea.deep)
-
-```
-
-Comparando la temperatura mensual de cada a?o con el mismo periodo 30 a?os atr?s, se observa que los ?ltimos a?os la temperatura es mayor que su periodo de comparaci?n 30 a?os atr?s. En conclusi?n, vemos que existe evidencia de que debido al cambio clim?tico la temperatura del mar va en aumento desde hace unos a?os y si sigue la misma tendencia esta diferencia aumentar? cada vez m?s con el tiempo. Adem?s, en los ?ltimos a?os el comportamiento de la temperatura se ha modificado, ya que aumenta y disminuye menos progresivamente a lo largo del a?o.
+Comparando la temperatura mensual de cada año con el mismo periodo 30 años atrás, se observa que los últimos años la temperatura es mayor que su periodo de comparación 30 años atrás. En conclusión, vemos que existe evidencia de que debido al cambio climático la temperatura del mar va en aumento desde hace unos años y si sigue la misma tendencia esta diferencia aumentará cada vez más con el tiempo. Además, en los últimos años el comportamiento de la temperatura se ha modificado, ya que aumenta y disminuye menos progresivamente a lo largo del año.
 
 Es bien sabido que el calentamiento global que está experimentando el planeta está afectando no solo a la tierra, sino también al fondo de los océanos. De hecho, el calentamiento de los océanos ha representado alrededor del 93% del calentamiento del planeta desde el decenio de 1950, debido a su gran capacidad para retener y liberar calor. Este calentamiento se produce como consecuencia del aumento de las emisiones de gases de efecto invernadero, sobre todo de dióxido de carbono, que a su vez atrapan cada vez más energía solar dentro de la atmosfera. La mayor parte de este calor atrapado se acaba almacenando en los océanos, lo que repercute en la temperatura y en la circulación del agua.
 La temperatura del agua representa uno de los elementos reguladores de la vida marina más importantes, por lo que los aumentos de temperatura están causando ya grandes cambios bajo la superficie del agua. Tanto es así, que el acusado incremento de la temperatura de las aguas más superficiales ya está provocando que muchas especies marinas se vayan al fondo del mar (a aguas más frías) o emigren a regiones menos castigadas por el cambio climático, debido al calentamiento excesivo del agua. Pero bajar hacia mayores profundidades no es siempre posible, sobre todo para las especies que dependen de la fotosíntesis, para las cuales la ausencia de luz es un límite insuperable.
@@ -509,5 +491,10 @@ Además, el comportamiento de la temperatura en profundidad 0 ha cambiado durant
 
 
 En conclusión, vemos que existe evidencia de que debido al cambio climático la temperatura del mar va en aumento desde hace unos años y si sigue la misma tendencia esta diferencia aumentará cada vez más con el tiempo. Además, en los últimos años el comportamiento de la temperatura se ha modificado, con las consecuencias para la vida marina y terrestre que esto puede conllevar. 
+
+** EJERCICIO 3e) **
+
+Our repository is : https://github.com/phamvanha2228/R-homework
+
 
 
